@@ -1,11 +1,15 @@
-﻿namespace Student_Management.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Student_Management.Models
 {
     public class Student
     {
-        public int id { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public DateTime EnrollmentDate { get; set; }
+        public int Id { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        public DateOnly EnrollmentDate { get; set; }
        
     }
 }

@@ -46,7 +46,7 @@ namespace Student_Management.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudent(int id, Student student)
         {
-            if (id != student.id)
+            if (id != student.Id)
             {
                 return BadRequest();
             }
@@ -80,7 +80,7 @@ namespace Student_Management.Controllers
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudent", new { id = student.id }, student);
+            return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
         }
 
         // DELETE: api/Students/5
@@ -101,7 +101,7 @@ namespace Student_Management.Controllers
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.id == id);
+            return _context.Students.Any(e => e.Id == id);
         }
     }
 }
