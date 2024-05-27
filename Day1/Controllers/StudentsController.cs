@@ -19,17 +19,25 @@ namespace Student_Management.Controllers
         {
             _context = context;
         }
+        private static StudentDTO StdDTO(Student student) =>
+   new StudentDTO
+   {
+       id = student.Id,
+       FirstName = student.FirstName,
+       LastName = student.LastName,
+       EnrollmentDate = student.EnrollmentDate
+   };
 
         // GET: api/Students
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+            return await _context.Students.Select(x =>StdDTO(x)).ToListAsync();
         }
 
         // GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<StudentDTO>> GetStudent(int id)
         {
             var student = await _context.Students.FindAsync(id);
 
@@ -38,20 +46,20 @@ namespace Student_Management.Controllers
                 return NotFound();
             }
 
-            return student;
+            return StdDTO(student);
         }
 
         // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent(int id, Student student)
+        public async Task<IActionResult> PutStudent(int id, StudentDTO stdnt)
         {
-            if (id != student.Id)
+            if (id != stdnt.id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            _context.Entry(stdnt).State = EntityState.Modified;
 
             try
             {
@@ -75,12 +83,18 @@ namespace Student_Management.Controllers
         // POST: api/Students
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(Student student)
+        public async Task<ActionResult<Student>> PostStudent(StudentDTO stdnt)
         {
+            var student = new Student
+            {
+                FirstName = stdnt.FirstName,
+                LastName = stdnt.LastName,
+                EnrollmentDate = stdnt.EnrollmentDate
+            };
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, student);
+            return CreatedAtAction(nameof(GetStudent), new { id = stdnt.id }, stdnt);
         }
 
         // DELETE: api/Students/5
